@@ -11,21 +11,30 @@
  */
 class Solution {
 public:
-    vector<vector<int>>result;
-    void dfs(TreeNode *root, int level){
-        if(!root)
-            return;
-        if(result.size()==level){
-            result.push_back({});
-        }
-        result[level].push_back(root->val);
-        dfs(root->left, level+1);
-        dfs(root->right, level+1);
-    }
     vector<vector<int>> levelOrder(TreeNode* root) {
-        //Recursive approach using DFS
-        dfs(root, 0);
-        return result;
+        queue<TreeNode *>q;
+        vector<vector<int>>result;
         
+        if(root==NULL)
+            return result;
+        
+        q.push(root);
+        while(!q.empty()){
+            int n = q.size();
+            vector<int>ans;
+            for(int i=0;i<n;i++){
+                TreeNode *temp = q.front();
+                q.pop();
+                
+                ans.push_back(temp->val);
+                
+                if(temp->left)
+                    q.push(temp->left);
+                if(temp->right)
+                    q.push(temp->right);
+            }
+            result.push_back(ans);
+        }
+        return result;
     }
 };
