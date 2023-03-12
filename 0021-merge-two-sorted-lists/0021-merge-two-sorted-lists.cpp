@@ -11,12 +11,10 @@
 class Solution {
 public:
     ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
-        //Creating the dummy node 
+        // Making up a dummy node 
         ListNode *dummy = new ListNode(0);
-        //Make up a temp node and point it at dummy 
         ListNode *temp = dummy;
         
-        //Run thw loop until list1 or list2 reaches NULL
         while(list1!=NULL && list2!=NULL){
             if(list1->val<list2->val){
                 temp->next=list1;
