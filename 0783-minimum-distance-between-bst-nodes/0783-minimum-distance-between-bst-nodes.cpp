@@ -11,19 +11,19 @@
  */
 class Solution {
 public:
-    int res = INT_MAX;
-    int pre=-1;
+    vector<int>result;
     int minDiffInBST(TreeNode* root) {
-        if(root->left!=NULL)
+        
+        if(root!=NULL){
             minDiffInBST(root->left);
-        if(pre>=0){
-            res=min(res, root->val-pre);
-        }
-        pre=root->val;
-        if(root->right!=NULL){
+            result.push_back(root->val);
             minDiffInBST(root->right);
         }
-        return res;
         
+        int temp = INT_MAX;
+        for(int i=1;i<result.size();i++){
+            temp=min(temp, result[i]-result[i-1]);
+        }
+        return temp;
     }
 };
