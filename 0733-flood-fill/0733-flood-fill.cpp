@@ -22,6 +22,7 @@ public:
         //Then recurively call the all 4 directions and check if the node is equal to source nodes
         //If they are equal then change it to color 
         //Basic DFS Traversal is followed 
+        //TC:O(MXN) SC:(1)
         
         //Get rows and cols of the image 
         int rows = image.size();
