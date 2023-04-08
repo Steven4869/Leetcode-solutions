@@ -45,7 +45,7 @@ public:
         //1. Get rows and cols 
         //2. Create  distance array 
         //3. Make all the 0s into distance array as 0 and push all of them into queues 
-        //4. Create a distance array to check all four directions of the node 
+        //4. Create a direction array to check all four directions of the node 
         //5. Pop it from queue to some variable 
         //6. Get new rows and col as element of the pop stored variable and direction array 
         //7. If it's greater then store into distance array 
