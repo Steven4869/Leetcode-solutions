@@ -1,20 +1,25 @@
 class Solution {
 public:
-    int solve(vector<int>& nums, int target, int sum, vector<int>&dp){
-        if(sum>target)
-            return 0;
-        if(sum == target)
+    
+    int solve(vector<int>&nums, int target, vector<int>&dp){
+        //Base Case
+        //If we reach to target 0 then we reach to the end 
+        if(target==0)
             return 1;
-        if(dp[sum]!=-1)
-            return dp[sum];
-        int result = 0;
+        if(target<0)
+            return 0;
+        
+        if(dp[target]!=-1)
+            return dp[target];
+        //Traverse the array
+        int ans =0;
         for(int i=0;i<nums.size();i++){
-            result = result + solve(nums, target, sum + nums[i], dp);
+            ans = ans + solve(nums, target-nums[i], dp);
         }
-        return dp[sum] = result;
+        return dp[target]=ans;
     }
     int combinationSum4(vector<int>& nums, int target) {
         vector<int>dp(target+1, -1);
-        return solve(nums, target, 0, dp);
+        return solve(nums, target, dp);
     }
 };
