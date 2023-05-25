@@ -1,41 +1,30 @@
 class Solution {
 public:
-    vector<int>dp;
-    int minCost(vector<int>& days, vector<int>& costs, int start){
-        int n = days.size();
-        //Base Case
-        if(start>=n)
+    
+    int solve(vector<int>&days, vector<int>&costs, int idx, vector<int>&dp){
+        //Base Case 
+        //If index exceeds the size of days 
+        if(idx>=days.size())
             return 0;
+        if(dp[idx]!=-1)
+            return dp[idx];
+        //1 day pass 
+        int sum =0;
+        int option1 = costs[0] + solve(days, costs, idx+1, dp);
         
-        //For a single day cost
-        int cost_day = costs[0] + minCost(days, costs, start + 1);
-        
+        //For 7 day pass 
         int i;
+        for(i=idx;i<days.size()&&days[i]<days[idx]+7;i++);
+        int option2 = costs[1] + solve(days, costs, i, dp);
         
-        if(dp[start])
-            return dp[start];
-        //For week 
-        //Skip to the week + starting day 
-        for(i=start;i<n&&days[i]<days[start]+7;i++);
-        int cost_week = costs[1] + minCost(days, costs, i);
+        //For 30 days pass 
+        for(i=idx;i<days.size()&&days[i]<days[idx]+30;i++);
+        int option3 = costs[2] + solve(days, costs, i, dp);
         
-        //For month 
-        //Skip to the month + starting day 
-        for(i=start;i<n&&days[i]<days[start]+30;i++);
-        int cost_month = costs[2] + minCost(days, costs, i);
-        
-        
-        dp[start] = min(cost_day, min(cost_week, cost_month));
-        
-        return dp[start];
+        return dp[idx]=min(option1, min(option2, option3));
     }
     int mincostTickets(vector<int>& days, vector<int>& costs) {
-        //Cost for one day = cost[0] + cost of next day 
-        //Cost for one week = cost[1] + cost of next day after week
-        //Cost for one month = cost[2] + cost of next day after month 
-        //Get the minimum of all three and that's the answer 
-        
-        dp.resize(366);
-        return minCost(days, costs, 0);
+        vector<int>dp(days.size()+1, -1);
+        return solve(days, costs, 0, dp);
     }
 };
