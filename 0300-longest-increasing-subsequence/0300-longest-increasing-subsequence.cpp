@@ -40,6 +40,24 @@ public:
         return dp[curr][prev+1]=max(take, notTake);
         
     }
+    int solveBS(vector<int>&nums){
+        if(nums.size()==0)
+            return 0;
+        
+        vector<int>result;
+        result.push_back(nums[0]);
+        
+        for(int i=1;i<nums.size();i++){
+            if(nums[i]>result.back()){
+                result.push_back(nums[i]);
+            }
+            else{
+                int index = lower_bound(result.begin(), result.end(), nums[i])-result.begin();
+                result[index]=nums[i];
+            }
+        }
+        return result.size();
+    }
     int lengthOfLIS(vector<int>& nums) {
         //This Question is similar to 0/1 Knapsack of including and excluding 
         //We will traverse the array and would go for two cases of including and excluding 
@@ -47,7 +65,10 @@ public:
         // return solve(nums, 0, -1);
         
         //Using Memoisation
-        vector<vector<int>>dp(nums.size()+1, vector<int>(nums.size()+1, -1));
-        return solveMemo(nums, 0, -1, dp);
+        // vector<vector<int>>dp(nums.size()+1, vector<int>(nums.size()+1, -1));
+        // return solveMemo(nums, 0, -1, dp);
+        
+        //DP using Binary Search for O(NlogN) solution 
+        return solveBS(nums);
     }
 };
