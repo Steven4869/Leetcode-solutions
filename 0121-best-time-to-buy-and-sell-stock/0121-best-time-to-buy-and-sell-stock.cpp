@@ -1,23 +1,14 @@
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
-        //We'll be going with two pointers solution 
-        int left =0;//denoting the buy position 
-        int right =1; //denoting the selling postion 
-        int maxProfit = 0;
-        //Run the loop until right pointer reaches to the end 
-        while(right<prices.size()){
-            //If right price is greater than left price then make up the profit 
-            if(prices[left]<prices[right]){
-                int profit = prices[right]-prices[left];
-                maxProfit=max(maxProfit, profit);
-            }
-            //If that's not the case then make the left pointer to the right 
-            else{
-                left = right;
-            }
-            right++;
+        int minAmount = prices[0];
+        int profit = 0;
+        for(int i=1;i<prices.size();i++){
+            int diff = prices[i]-minAmount;
+            profit = max(profit, diff);
+            //Updating minAmount for the future check
+            minAmount = min(minAmount, prices[i]);
         }
-        return maxProfit;
+        return profit;
     }
 };
