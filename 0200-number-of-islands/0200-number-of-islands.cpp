@@ -22,11 +22,7 @@ public:
         int cols = grid[0].size();
         //Creating visited array 
         vector<vector<int>>visited(rows,vector<int>(cols,0));
-        for(int i=0;i<rows;i++){
-            for(int j=0;j<cols;j++){
-                visited[i].push_back(0);
-            }
-        }
+        
         int count=0;
         
         for(int it=0;it<rows;it++){
