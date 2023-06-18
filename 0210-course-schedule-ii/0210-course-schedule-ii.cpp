@@ -1,53 +1,61 @@
 class Solution {
 public:
+    //In this question, we need to check for the cycle too 
+    //If we print topological sort, then we might miss on the cycle detection
     bool cycle;
-    void dfs(unordered_map<int,list<int>>&adjList, vector<int>&visited, stack<int>&st, int node, vector<int>&parent){
-        if(cycle)
+    void dfs(unordered_map<int, list<int>> &adjList, vector<int>&visited,                stack<int>&st,vector<int>&dfsVisited, int node){
+        //Mark the node as visited 
+        if(cycle){
             return;
+        }
         visited[node]=1;
-        parent[node]=1;
-        for(auto neighbours:adjList[node]){
-            if(parent[neighbours]==1)
-                cycle=true;
-            if(!visited[neighbours]){
-                dfs(adjList,visited,st,neighbours,parent);
+        dfsVisited[node]=1;
+        //Traverse its neighbours 
+        for(auto i:adjList[node]){
+            //If not visited then call the dfs 
+            if(dfsVisited[i]==1){
+                cycle = true;
+            }
+            if(!visited[i]){
+                dfs(adjList, visited, st, dfsVisited, i);
             }
         }
         st.push(node);
-        parent[node]=0;
+        dfsVisited[node]=0;
     }
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
-        //Creating a Adjacency List 
-        unordered_map<int,list<int>>adjList;
-        int edges = prerequisites.size();
-        for(int i=0;i<edges;i++){
+        //Prpeare an Adjacency List 
+        
+        unordered_map<int, list<int>>adjList;
+        for(int i=0;i<prerequisites.size();i++){
             int u = prerequisites[i][0];
             int v = prerequisites[i][1];
             
             adjList[u].push_back(v);
-    
         }
-    
-    //Creating a visited array, stack, parent array and cycle detection 
-    vector<int>visited(numCourses, 0);
-    stack<int>st;
-    vector<int>parent(numCourses, 0);
-    cycle = false;
-    for(int i=0;i<numCourses;i++){
-        if(!visited[i]){
-            dfs(adjList, visited, st, i, parent);
+        
+        //Creating varaibles for Topo Sort 
+        
+        vector<int>visited(numCourses, 0);
+        stack<int>st;
+        vector<int>dfsVisited(numCourses, 0);
+        cycle = false;
+        for(int i=0;i<numCourses;i++){
+            //If not visited then call the dfs 
+            if(!visited[i]){
+                dfs(adjList, visited, st, dfsVisited, i);
+            }
         }
-    }
-    
-    //To store the result
-    vector<int>result;
-    while(!st.empty()){
-        result.push_back(st.top());
-        st.pop();
-    }
-        if(cycle)
+        vector<int>result;
+        while(!st.empty()){
+            result.push_back(st.top());
+            st.pop();
+        }
+        if(cycle){
             return {};
-        reverse(result.begin(),result.end());
+        }
+        reverse(result.begin(), result.end());
         return result;
+        
     }
 };
