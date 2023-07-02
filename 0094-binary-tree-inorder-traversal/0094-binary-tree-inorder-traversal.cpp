@@ -11,13 +11,18 @@
  */
 class Solution {
 public:
-    vector<int>result;
-    vector<int> inorderTraversal(TreeNode* root) {
-        if(root!=NULL){
-            inorderTraversal(root->left);
-            result.push_back(root->val);
-            inorderTraversal(root->right);
+    void solve(TreeNode *root, vector<int>&result){
+        if(root==NULL){
+            return;
         }
+        solve(root->left, result);
+        result.push_back(root->val);
+        solve(root->right, result);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        
+        vector<int>result;
+        solve(root, result);
         return result;
     }
 };
