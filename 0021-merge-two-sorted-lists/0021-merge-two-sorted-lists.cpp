@@ -32,6 +32,8 @@ public:
         if(list2!=NULL){
             temp->next=list2;
         }
-        return dummy->next;
+        temp = dummy->next;
+        return temp;
+        delete dummy;
     }
 };
