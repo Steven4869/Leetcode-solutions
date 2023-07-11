@@ -11,7 +11,6 @@
 class Solution {
 public:
     ListNode* middleNode(ListNode* head) {
-        //Tortoise and Hare
         ListNode *slow = head;
         ListNode *fast = head;
         while(fast!=NULL && fast->next!=NULL){
