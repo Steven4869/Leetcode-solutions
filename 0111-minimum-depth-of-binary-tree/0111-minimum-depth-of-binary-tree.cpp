@@ -28,7 +28,32 @@ public:
         }
         return min(leftNode, rightNode) + 1;
     }
+    int solveBFS(TreeNode *root){
+        if(root==NULL){
+            return 0;
+        }
+        int level = 0;
+        queue<TreeNode *>q;
+        q.push(root);
+        while(!q.empty()){
+            int size = q.size();
+            level++;
+            for(int i=0;i<size;i++){
+                TreeNode *frontNode = q.front();
+                q.pop();
+                
+                if(frontNode->left)
+                    q.push(frontNode->left);
+                if(frontNode->right)
+                    q.push(frontNode->right);
+                if(frontNode->left==NULL && frontNode->right == NULL){
+                    return level;
+                }
+            }
+        }
+        return level;
+    }
     int minDepth(TreeNode* root) {
-        return solve(root);
+        return solveBFS(root);
     }
 };
