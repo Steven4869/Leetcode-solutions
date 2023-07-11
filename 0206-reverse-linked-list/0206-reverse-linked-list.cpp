@@ -10,10 +10,13 @@
  */
 class Solution {
 public:
-    ListNode* reverseList(ListNode* head) {
+    ListNode *solveIterative(ListNode *head){
+        //Using iteration 
+        //Make three pointers 
         ListNode *curr = head;
-        ListNode *prev = NULL;
         ListNode *nxt = NULL;
+        ListNode *prev = NULL;
+        
         while(curr!=NULL){
             nxt=curr->next;
             curr->next=prev;
@@ -21,5 +24,20 @@ public:
             curr=nxt;
         }
         return prev;
+    }
+    ListNode *solveRecursion(ListNode* head){
+        //base Case 
+        if (head == NULL || head->next == NULL) {
+        return head;
+    }
+    ListNode* newHead = solveRecursion(head->next);
+    head->next->next = head;
+    head->next = NULL;
+    return newHead;
+    }
+    ListNode* reverseList(ListNode* head) {
+        // return solveIterative(head);
+        return solveRecursion(head);
+        
     }
 };
