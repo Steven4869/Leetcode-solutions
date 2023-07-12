@@ -11,33 +11,39 @@
 class Solution {
 public:
     ListNode *reverseLL(ListNode *head){
-        ListNode *prev = NULL;
+        //Make three pointers 
         ListNode *curr = head;
+        ListNode *prev = NULL;
         ListNode *nxt = NULL;
         
         while(curr!=NULL){
-            nxt=curr->next;
-            curr->next=prev;
-            prev=curr;
-            curr=nxt;
+            nxt = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nxt;
         }
         return prev;
     }
-    bool isPalindrome(ListNode* head) {
+    ListNode *middleLL(ListNode *head){
         ListNode *slow = head;
         ListNode *fast = head;
         while(fast!=NULL && fast->next!=NULL){
             slow=slow->next;
             fast=fast->next->next;
         }
-        slow=reverseLL(slow);
-        while(slow!=NULL){
-            if(slow->val!=head->val){
+        return slow;
+    }
+    bool isPalindrome(ListNode* head) {
+        ListNode *middle = middleLL(head);
+        ListNode *reverse = reverseLL(middle);
+        ListNode *temp = head;
+        while(temp!=NULL && reverse!=NULL){
+            if(temp->val != reverse->val)
                 return false;
-            }
-            slow=slow->next;
-            head=head->next;
+            temp=temp->next;
+            reverse=reverse->next;
         }
         return true;
+        
     }
 };
