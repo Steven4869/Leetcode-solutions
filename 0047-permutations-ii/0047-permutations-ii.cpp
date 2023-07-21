@@ -1,35 +1,36 @@
 class Solution {
 public:
     vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        vector<int> current;
-        unordered_map<int, int> count; // Maintain count of elements used
+        vector<vector<int>>result;
+        vector<int>curr;
+        unordered_map<int,int>mp;
         
-        for (int num : nums) {
-            count[num]++;
+        for(int num:nums){
+            mp[num]++;
         }
         
-        backtrack(nums, current, result, count);
+        solve(nums, result, curr, mp);
         return result;
     }
-    
-    void backtrack(vector<int>& nums, vector<int>& current, vector<vector<int>>& result, unordered_map<int, int>& count) {
-        if (current.size() == nums.size()) {
-            result.push_back(current);
+    void solve(vector<int>&nums, vector<vector<int>>&result, 
+              vector<int>&curr, unordered_map<int,int>&mp){
+        if(curr.size() == nums.size()){
+            result.push_back(curr);
             return;
         }
         
-        for (const auto& entry : count) {
+        for(const auto &entry:mp){
             int num = entry.first;
             int freq = entry.second;
             
-            if (freq > 0) {
-                current.push_back(num);
-                count[num]--;
-                backtrack(nums, current, result, count);
-                current.pop_back();
-                count[num]++;
+            if(freq>0){
+                curr.push_back(num);
+                mp[num]--;
+                solve(nums, result, curr, mp);
+                curr.pop_back();
+                mp[num]++;
             }
         }
+
     }
 };
