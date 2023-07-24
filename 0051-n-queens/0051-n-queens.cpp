@@ -1,58 +1,55 @@
 class Solution {
 public:
-    vector<vector<string>> solveNQueens(int n) {
-        //Problem is based on Backtracking 
-        //What we will follow is that we'll check both diagonals and columns of the Queen 
-        //Then we'll create a array where we'll store the position as Q
+    bool isSafe(int row, int col, vector<string>&board, int n){
+        int x = 0;
+        while(x<row){
+            if(board[x][col] == 'Q')
+                return false;
+            x++;
+        }
+        x = row;
+        int y = col;
+        //Upper Diagonal
+        while(x>=0 && y>=0){
+            if(board[x][y] == 'Q')
+                return false;
+            x--;
+            y--;
+        }
         
-        //Algortihm 
-        //1. Make the array for result and board consisting of dots 
-        vector<vector<string>>result;
-        vector<string>board(n, string(n, '.'));
+        //Lower Diagonal
+        x = row;
+        y = col;
         
-        //2. Make the set for Positive Dialginal, Negative Diagonal and Column 
-        unordered_set<int> positiveDiagonal, negativeDiagonal, column;
+        while(x>=0 && y<n){
+            if(board[x][y] == 'Q')
+                return false;
+            x--;
+            y++;
+        }
+        return true;
         
-        //3. Call the backtrack function 
-        int len = n;
-        backtrack(0, result, board, positiveDiagonal, negativeDiagonal, column, len);
-        
-        //4. Return the result
-        return result;
     }
-    
-    //Making the backtrack function 
-    void backtrack(int rows, vector<vector<string>> &result, vector<string> &board, 
-                  unordered_set<int> &positiveDiagonal, unordered_set<int>                                      &negativeDiagonal, unordered_set<int> &column, int &len){
-        //5. If the row reaches the end then we have got the solution 
-        if(rows == len){
+    void solveNQueen(vector<vector<string>>&result, vector<string>&board,
+                    int row, int n){
+        if(row == n){
             result.push_back(board);
             return;
         }
-        //6. For every column check the validity of the Queen 
-        for(int cols=0;cols<len;cols++){
-            if(isValid(rows, cols, positiveDiagonal, negativeDiagonal, column)){
-                //Then do the backtrack
-                board[rows][cols] = 'Q';
-                positiveDiagonal.insert(rows+cols);
-                negativeDiagonal.insert(rows-cols);
-                column.insert(cols);
-                
-                backtrack(rows+1, result, board, positiveDiagonal, negativeDiagonal,                                    column,len);
-                
-                board[rows][cols] = '.';
-                positiveDiagonal.erase(rows+cols);
-                negativeDiagonal.erase(rows-cols);
-                column.erase(cols);
+        
+        for(int col=0;col<n;col++){
+            if(isSafe(row,col,board,n)){
+                board[row][col] = 'Q';
+                solveNQueen(result, board, row+1, n);
+                board[row][col] = '.';
             }
         }
     }
-    //Making the isValid function 
-    
-    bool isValid(int rows, int cols, unordered_set<int> &positiveDiagonal,                                  unordered_set<int>&negativeDiagonal, unordered_set<int> &column){
-        bool isPosDiagonal = (positiveDiagonal.find(rows+cols) == positiveDiagonal.end());
-        bool isNegDiagonal = (negativeDiagonal.find(rows-cols) == negativeDiagonal.end());
-        bool isColumn      = (column.find(cols) == column.end());
-        return isPosDiagonal&&isNegDiagonal&&isColumn;
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>>result;
+        vector<string>board(n, string(n, '.'));
+        
+        solveNQueen(result, board, 0, n);
+        return result;
     }
 };
