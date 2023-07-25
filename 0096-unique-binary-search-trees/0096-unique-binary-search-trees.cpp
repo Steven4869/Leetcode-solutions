@@ -1,30 +1,33 @@
 class Solution {
 public:
-    int dp[20];
-    int numTrees(int n) {
-        // we are making the root node to be ith value then get the values of other nodes 
-        // Trees[3] = Trees[0]*Trees[2]+Trees[1]*Trees[1]+Trees[2]*Trees[0]
-        // Trees[2] = Trees[0]*Trees[1]+Trees[1]*Trees[0]
-        // For a single node number of nodes can be only one 
-        
-        // if(n<=1)
-        //     return 1;
-        // int result =0;
-        // for(int i=1;i<=n;i++){
-        //     result = result + numTrees(i-1)*numTrees(n-i);
-        // }
-        // return result;
-        //TC : O(N^N)
-        //To optimise it we have to save the calss in the dp table 
-        
+    int solve(int n){
         if(n<=1)
             return 1;
-        if(dp[n])
-            return dp[n];
+        
+        int result = 0;
         for(int i=1;i<=n;i++){
-            dp[n]+=numTrees(i-1)*numTrees(n-i);
+            result = result + solve(i-1)*solve(n-i);
         }
-        return dp[n];
-     
+        return result;
+    }
+    int solveMemo(int n, vector<int>&dp){
+        if(n<=1)
+            return 1;
+        if(dp[n]!=-1)
+            return dp[n];
+        
+        int result = 0;
+        for(int i=1;i<=n;i++){
+            result = result + solveMemo(i-1, dp)*solveMemo(n-i, dp);
+        }
+        return dp[n] = result;
+    }
+    int numTrees(int n) {
+        //Recursive
+        // return solve(n);
+        
+        //Memo
+        vector<int>dp(n+1, -1);
+        return solveMemo(n, dp);
     }
 };
