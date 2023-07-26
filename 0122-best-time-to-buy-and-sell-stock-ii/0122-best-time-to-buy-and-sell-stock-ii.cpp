@@ -4,53 +4,49 @@ public:
         //Base Case 
         if(index == prices.size())
             return 0;
-        int profit =0;
         
-        //If the buying of stock is allowed 
+        int profit = 0;
+        
         if(buy){
-            //Stock Bought, so representing it as negative, stock not bought so skipping it
-            //Take the maximum out of those 
-            profit = max((-prices[index])+solve(prices,0,index+1), 0 + solve(prices, 1, index+1));
+            profit = max((-prices[index]) + solve(prices, 0, index+1),
+                        0 + solve(prices, 1, index+1));
         }
         else{
-            //If buying is not true then we can sell
-            //Now we can sell it or skip to the next index 
-            profit = max((prices[index])+solve(prices,1,index+1), 0 + solve(prices, 0, index+1));
+            profit = max(prices[index] + solve(prices, 1, index+1),
+                        0 + solve(prices, 0, index+1));
         }
+        
         return profit;
     }
-    int solveMemo(vector<int>&prices, int buy, int index, vector<vector<int>>&dp){
-        //Base Case 
+    
+    int solveMemo(vector<int>&prices, int buy, int              index,vector<vector<int>>&dp){
+        
         if(index == prices.size())
             return 0;
-        int profit =0;
         
-        if(dp[buy][index]!=-1){
+        if(dp[buy][index]!=-1)
             return dp[buy][index];
-        }
         
-        //If the buying of stock is allowed 
+        int profit = 0;
         if(buy){
-            //Stock Bought, so representing it as negative, stock not bought so skipping it
-            //Take the maximum out of those 
-            profit = max((-prices[index])+solveMemo(prices,0,index+1, dp), 0 + solveMemo(prices, 1, index+1, dp));
+            profit = max((-prices[index])+solveMemo(prices, 0, index+1, dp),
+                        0 + solveMemo(prices, 1, index+1, dp));
         }
         else{
-            //If buying is not true then we can sell
-            //Now we can sell it or skip to the next index 
-            profit = max((prices[index])+solveMemo(prices,1,index+1, dp), 0 + solveMemo(prices, 0, index+1, dp));
+            profit = max(prices[index] + solveMemo(prices,1, index+1, dp),
+                        0 + solveMemo(prices, 0, index+1, dp));
         }
-        return dp[buy][index]=profit;
+        
+        return dp[buy][index] = profit;
     }
     int maxProfit(vector<int>& prices) {
-        //We have three ways, one to buy, one to skip and one to sell it
-        //We will be setting up buy=1 => allowed to buy the stock 
-        //If the buy = 0 => Not allowed to buy 
+        //Recursion 
         
         // return solve(prices, 1, 0);
         
-        //Using Memoisation 
-        vector<vector<int>>dp(2, vector<int>(prices.size()+1, -1));
+        //Memoisation 
+        int n = prices.size();
+        vector<vector<int>>dp(2, vector<int>(n+1, -1));
         return solveMemo(prices, 1, 0, dp);
     }
 };
