@@ -1,66 +1,49 @@
 class Solution {
 public:
+    //Better Way
     
-    int solve(vector<int>&coins, int amount){
-        if(amount<0)
+    int solve(vector<int>& coins, int amount, int index){
+        if(amount==0)
+            return 0;
+        if(amount<0 || index == coins.size())
             return INT_MAX;
         
-        if(amount == 0)
-            return 0;
+        int include = solve(coins, amount - coins[index], index);
         
-        int minCoins = INT_MAX;
+        if(include!=INT_MAX)
+            include++;
         
-        for(int i=0;i<coins.size();i++){
-            int ans = solve(coins, amount - coins[i]);
-            if(ans!=INT_MAX)
-                minCoins = min(minCoins, 1+ans);
-        }
-        return minCoins;
+        int exclude = solve(coins, amount, index+1);
+        
+        return min(include, exclude);
     }
-    
-    int solveMemoisation(vector<int>&coins, int amount, vector<int>&dp){
-        if(amount == 0)
-            return 0;
-        if(amount<0)
-            return INT_MAX;
-        if(dp[amount]!=-1)
-            return dp[amount];
-        int minCoins = INT_MAX;
-        for(int i=0;i<coins.size();i++){
-            int ans = solveMemoisation(coins, amount - coins[i], dp);
-            if(ans!=INT_MAX)
-                minCoins = min(minCoins, 1+ans);
-        }
-        return dp[amount]=minCoins;
-    }
-    
-    int solveTabulation(vector<int>&coins, int amount){
-        vector<int>dp(amount+1, INT_MAX);
-        dp[0]=0;
-        
-        for(int i=1;i<=amount;i++){
-            for(auto coin:coins){
-                if(coin<=i && dp[i-coin]!=INT_MAX)
-                    dp[i] = min(dp[i], dp[i-coin]+1);
-            }
-        }
-        
-        return dp[amount] == INT_MAX?-1:dp[amount];
-        
-    }
+    int solveMemo(vector<int>& coins, int amount, int index, vector<vector<int>>&dp) {
+    if (amount == 0)
+        return 0;
+
+    if (amount < 0 || index == coins.size())
+        return INT_MAX;
+
+    if (dp[index][amount] != -1)
+        return dp[index][amount];
+
+    int include = solveMemo(coins, amount - coins[index], index, dp);
+    if (include != INT_MAX)
+        include++;
+    int exclude = solveMemo(coins, amount, index + 1, dp); 
+
+    return dp[index][amount] = min(include, exclude);
+}
     int coinChange(vector<int>& coins, int amount) {
         
-        //Recursion 
-        // int result = solve(coins, amount);
-        // if(result != INT_MAX)
-        //     return result;
-        // return -1; 
+        //Recursion
+        // int result = solve(coins, amount, 0);
+        // return result == INT_MAX?-1:result;
         
         //Memoisation 
-        vector<int>dp(amount+1, -1);
-        int result = solveMemoisation(coins, amount, dp);
-        if(result != INT_MAX)
-            return result;
-        return -1;
+        int n = coins.size();
+        vector<vector<int>>dp(n+1, vector<int>(amount+1, -1));
+        int result = solveMemo(coins, amount, 0, dp);
+        return result == INT_MAX?-1:result;
     }
 };
