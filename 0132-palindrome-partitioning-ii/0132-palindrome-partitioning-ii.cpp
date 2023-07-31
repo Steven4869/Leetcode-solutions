@@ -1,35 +1,40 @@
 class Solution {
 public:
-    int solve(int start, int end, vector<vector<bool>>&isPalindrome,
-             vector<vector<int>>&memo){
-        if(start == end || isPalindrome[start][end])
-            return 0;
-        
-        if(memo[start][end]!=-1)
-            return memo[start][end];
-        
-        int minCuts = INT_MAX;
-        for(int i=start;i<end;i++){
-            if(isPalindrome[start][i]){
-                minCuts = min(minCuts, solve(i+1, end, isPalindrome, memo)+1);
+    bool isPalindrome(string& s, int left, int right) {
+        while (left < right) {
+            if (s[left] != s[right]) {
+                return false;
             }
+            left++;
+            right--;
         }
-        
-        return memo[start][end]=minCuts;
+        return true;
     }
-    int minCut(string s) {
-        int n = s.length();
-        vector<vector<int>>memo(n, vector<int>(n, -1));
-        vector<vector<bool>>isPalindrome(n, vector<bool>(n, false));
-        
-        for(int i=n-1;i>=0;i--){
-            for(int j=i;j<n;j++){
-                if(s[i] == s[j] && (j-i<=1 || isPalindrome[i+1][j-1])){
-                    isPalindrome[i][j]=true;
-                }
+
+    int minCutRecursive(string& s, int start, vector<int>& dp) {
+        if (start == s.length()) {
+            return -1; // Base case: no more cuts needed
+        }
+
+        if (dp[start] != -1) {
+            return dp[start];
+        }
+
+        int minCuts = INT_MAX;
+
+        for (int len = 1; start + len <= s.length(); len++) {
+            if (isPalindrome(s, start, start + len - 1)) {
+                int cuts = minCutRecursive(s, start + len, dp);
+                minCuts = min(minCuts, cuts + 1);
             }
         }
-        
-        return solve(0, n-1, isPalindrome, memo);
+
+        dp[start] = minCuts;
+        return minCuts;
+    }
+
+    int minCut(string s) {
+        vector<int> dp(s.length(), -1);
+        return minCutRecursive(s, 0, dp);
     }
 };
