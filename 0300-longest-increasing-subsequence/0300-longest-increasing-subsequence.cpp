@@ -1,74 +1,44 @@
 class Solution {
 public:
-    int solve(vector<int>&nums, int curr, int prev){
-        //The current is initialised to 0 whereas prev as -1 to include the first element of array
+    
+    int solve(vector<int>&nums, int n, int curr, int prev){
         
         //Base Case 
-        //If the current index goes out of the index 
-        if(curr==nums.size())
+        if(curr == n)
             return 0;
         
-        //Case for Include 
-        int take =0;
-        if(prev ==-1 || nums[prev]<nums[curr]){
-            take = 1 + solve(nums, curr+1, curr);
-        }
-        int notTake = 0 + solve(nums, curr+1, prev);
-        //Take the maximum of Take and notTake
+        int take = 0;
+        
+        if(prev == -1 || nums[curr]>nums[prev])
+            take = 1 + solve(nums, n, curr+1, curr);
+        int notTake = 0 + solve(nums, n, curr+1, prev);
+        
         return max(take, notTake);
-        
     }
-    int solveMemo(vector<int>&nums, int curr, int prev, vector<vector<int>>&dp){
-        //The current is initialised to 0 whereas prev as -1 to include the first element of array
-        
+    int solveMemo(vector<int>&nums, int n, int curr, int prev, vector<vector<int>>&dp){
         //Base Case 
-        //If the current index goes out of the index 
-        if(curr==nums.size())
+        if(curr == n)
             return 0;
         
-        if(dp[curr][prev+1]!=-1){
+        if(dp[curr][prev+1]!=-1)
             return dp[curr][prev+1];
-        }
-        //Case for Include 
-        int take =0;
-        if(prev ==-1 || nums[prev]<nums[curr]){
-            take = 1 + solveMemo(nums, curr+1, curr, dp);
-        }
-        int notTake = 0 + solveMemo(nums, curr+1, prev, dp);
-        //Take the maximum of Take and notTake
-        //Take prev+1 because we are starting from -1
-        return dp[curr][prev+1]=max(take, notTake);
         
-    }
-    int solveBS(vector<int>&nums){
-        if(nums.size()==0)
-            return 0;
-        
-        vector<int>result;
-        result.push_back(nums[0]);
-        
-        for(int i=1;i<nums.size();i++){
-            if(nums[i]>result.back()){
-                result.push_back(nums[i]);
-            }
-            else{
-                int index = lower_bound(result.begin(), result.end(), nums[i])-result.begin();
-                result[index]=nums[i];
-            }
+        int take = 0;
+        if(prev == -1 || nums[curr]>nums[prev]){
+            take = 1 + solveMemo(nums, n, curr+1, curr, dp);
         }
-        return result.size();
+        int notTake = 0 + solveMemo(nums, n, curr+1, prev, dp);
+        return dp[curr][prev+1] = max(take, notTake);
     }
     int lengthOfLIS(vector<int>& nums) {
-        //This Question is similar to 0/1 Knapsack of including and excluding 
-        //We will traverse the array and would go for two cases of including and excluding 
-        //Condition of including, previous element has to be smaller than the upcoming element 
-        // return solve(nums, 0, -1);
+        // We need to either include the current element or exclude it then based on it get the maximum of the calls and that's the length of LIS 
         
-        //Using Memoisation
-        // vector<vector<int>>dp(nums.size()+1, vector<int>(nums.size()+1, -1));
-        // return solveMemo(nums, 0, -1, dp);
+        // int n = nums.size();
+        // return solve(nums, n, 0, -1);
         
-        //DP using Binary Search for O(NlogN) solution 
-        return solveBS(nums);
+        //Using Memoisation 
+        int n = nums.size();
+        vector<vector<int>>dp(n+1, vector<int>(n+1, -1));
+        return solveMemo(nums, n, 0, -1, dp);
     }
 };
