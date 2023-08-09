@@ -1,15 +1,24 @@
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
-        int n = s.length();
+        // Approach is quite simple 
+        // We will keep an set of charcters for storing the unique charcters in the window 
+        //Run the loop until we reach the end of the length of string
+        //Get the character from the string 
+        //Check if the word is in the window or not 
+        //If not insert it in the window, update the answer and increment the right 
+        // If exists in the window and it is repated then erase from the window and increment the left 
+        
         unordered_set<char>window;
-        int left =0, right=0;
-        int ans =0;
+        int right = 0;
+        int left = 0;
+        int n = s.length();
+        int result = 0;
         while(right<n){
             char c = s[right];
             if(window.find(c)==window.end()){
                 window.insert(c);
-                ans = max(ans, right-left+1);
+                result = max(result, right-left+1);
                 right++;
             }
             else{
@@ -17,6 +26,6 @@ public:
                 left++;
             }
         }
-        return ans;
+        return result;
     }
 };
