@@ -1,32 +1,22 @@
 class Solution {
 public:
-    
-    void dfs(vector<vector<int>>&image, int sr, int sc, int rows, int cols, int color, int source){
-        //Boundary Conditions 
-        if(sr<0||sr>=rows||sc<0||sc>=cols){
+    void dfs(vector<vector<int>>& image, int sr, int sc, int color, int source, int rows, int cols){
+        //Base Condition 
+        if(sr<0 || sc <0 || sr>=rows || sc>=cols || image[sr][sc]!=source)
             return;
-        }
-        else if(source!=image[sr][sc]){
-            return;
-        }
-        image[sr][sc] = color;
-        
-        //Then Call DFS in 4 directions 
-        dfs(image, sr-1, sc, rows, cols, color, source);
-        dfs(image, sr+1, sc, rows, cols, color, source);
-        dfs(image, sr, sc-1, rows, cols, color, source);
-        dfs(image, sr, sc+1, rows, cols, color, source);
+        image[sr][sc]=color;
+        dfs(image, sr-1, sc, color, source, rows, cols);
+        dfs(image, sr+1, sc, color, source, rows, cols);
+        dfs(image, sr, sc-1, color, source, rows, cols);
+        dfs(image, sr, sc+1, color, source, rows, cols);
     }
-    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color)    {
-       //Get the rows and columns 
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
         int rows = image.size();
-        int columns = image[0].size();
-        
-        //Get the source 
+        int cols = image[0].size();
         int source = image[sr][sc];
         
-        if(source!=color){
-            dfs(image, sr, sc, rows, columns, color, source);
+        if(source != color){
+            dfs(image, sr, sc, color, source, rows, cols);
         }
         return image;
     }
