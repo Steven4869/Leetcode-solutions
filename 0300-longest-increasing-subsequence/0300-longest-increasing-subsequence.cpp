@@ -37,6 +37,24 @@ public:
         
         return dp[curr][prev+1] = max(take, notTake);
     }
+    int solveBinary(vector<int>&nums){
+        int n = nums.size();
+        vector<int>result;
+        if(n==0)
+            return 0;
+        
+        result.push_back(nums[0]);
+        for(int i=1;i<n;i++){
+            if(nums[i]>result.back())
+                result.push_back(nums[i]);
+            else{
+                //find the index of the bigger element
+                int index = lower_bound(result.begin(), result.end(), nums[i])-result.begin();
+                result[index]=nums[i];
+            }
+        }
+        return result.size();
+    }
     int lengthOfLIS(vector<int>& nums) {
         //Using Recursion 
         
@@ -46,8 +64,11 @@ public:
         //Using Memoisation 
         
         
-        int n = nums.size();
-        vector<vector<int>>dp(n+1, vector<int>(n+1, -1));
-        return solveMemo(nums, n, 0, -1, dp);
+        // int n = nums.size();
+        // vector<vector<int>>dp(n+1, vector<int>(n+1, -1));
+        // return solveMemo(nums, n, 0, -1, dp);
+        
+        //Using Binary Search 
+        return solveBinary(nums);
     }
 };
