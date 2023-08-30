@@ -1,26 +1,16 @@
 class Solution {
 public:
-    bool solve(vector<int>&nums, int idx, vector<int>&dp){
-        int n = nums.size();
-        if(idx == n-1)
-            return true;
-        if(idx>=n)
-            return false;
-        if(nums[idx] == 0)
-            return false;
-        if(dp[idx]!=-1)
-            return dp[idx];
-        for(int j=1;j<=nums[idx];j++){
-            if(solve(nums, idx+j, dp)){
-                dp[idx] = 1;
-                return true;
-            }            
-        }
-        dp[idx] = 0;
-        return false;
-    }
     bool canJump(vector<int>& nums) {
-        vector<int>dp(nums.size()+1, -1);
-        return solve(nums, 0, dp);
+        int n = nums.size();
+        int goalPost = n-1;
+        for(int i=n-2;i>=0;i--){
+            if(i+nums[i]>=goalPost){
+                goalPost = i;
+            }
+        }
+        
+        if(goalPost == 0)
+            return true;
+        return false;
     }
 };
