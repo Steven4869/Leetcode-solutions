@@ -1,61 +1,37 @@
 class Solution {
 public:
-    //In this question, we need to check for the cycle too 
-    //If we print topological sort, then we might miss on the cycle detection
-    bool cycle;
-    void dfs(unordered_map<int, list<int>> &adjList, vector<int>&visited,                stack<int>&st,vector<int>&dfsVisited, int node){
-        //Mark the node as visited 
-        if(cycle){
-            return;
-        }
-        visited[node]=1;
-        dfsVisited[node]=1;
-        //Traverse its neighbours 
-        for(auto i:adjList[node]){
-            //If not visited then call the dfs 
-            if(dfsVisited[i]==1){
-                cycle = true;
-            }
-            if(!visited[i]){
-                dfs(adjList, visited, st, dfsVisited, i);
-            }
-        }
-        st.push(node);
-        dfsVisited[node]=0;
-    }
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
-        //Prpeare an Adjacency List 
-        
-        unordered_map<int, list<int>>adjList;
-        for(int i=0;i<prerequisites.size();i++){
-            int u = prerequisites[i][0];
-            int v = prerequisites[i][1];
+        unordered_map<int,list<int>>adjList;
+        vector<int>indegree(numCourses);
+        for(const auto&edge:prerequisites){
+            int u = edge[0];
+            int v = edge[1];
             
-            adjList[u].push_back(v);
+            indegree[u]++;
+            adjList[v].push_back(u);
         }
         
-        //Creating varaibles for Topo Sort 
-        
-        vector<int>visited(numCourses, 0);
-        stack<int>st;
-        vector<int>dfsVisited(numCourses, 0);
-        cycle = false;
+        vector<int>result;
+        queue<int>q;
         for(int i=0;i<numCourses;i++){
-            //If not visited then call the dfs 
-            if(!visited[i]){
-                dfs(adjList, visited, st, dfsVisited, i);
+            if(indegree[i]==0)
+                q.push(i);
+        }
+        
+        while(!q.empty()){
+            int frontNode = q.front();
+            q.pop();
+            result.push_back(frontNode);
+            
+            for(const auto &neighbor:adjList[frontNode]){
+                indegree[neighbor]--;
+                if(indegree[neighbor]==0)
+                    q.push(neighbor);
             }
         }
-        vector<int>result;
-        while(!st.empty()){
-            result.push_back(st.top());
-            st.pop();
-        }
-        if(cycle){
+        if(result.size()==numCourses)
+            return result;
+        else
             return {};
-        }
-        reverse(result.begin(), result.end());
-        return result;
-        
     }
 };
