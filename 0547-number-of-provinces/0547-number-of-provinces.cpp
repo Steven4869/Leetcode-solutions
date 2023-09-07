@@ -1,46 +1,23 @@
 class Solution {
 public:
-    
-    int findParent(vector<int>&parent, int node){
-        if(parent[node] == node)
-            return node;
-        return parent[node]=findParent(parent, parent[node]);
-    }
-    void Union(int u, int v, vector<int>&parent, vector<int>&rank){
-        u = findParent(parent, u);
-        v = findParent(parent, v);
+    void dfs(int node, vector<int>&visited,vector<vector<int>>& isConnected){
+        visited[node]=1;
         
-        if(rank[u]<rank[v])
-            parent[u]=v;
-        else if(rank[u]>rank[v])
-            parent[v]=u;
-        else{
-            parent[u]=v;
-            rank[u]++;
+        for(int neighbor = 0;neighbor<isConnected.size();neighbor++){
+            if(!visited[neighbor] && isConnected[node][neighbor]==1)
+                dfs(neighbor, visited, isConnected);
         }
     }
     int findCircleNum(vector<vector<int>>& isConnected) {
-        int n = isConnected.size();
-        
-        //Creating a parent and rank array 
-        vector<int>parent(n);
-        vector<int>rank(n, 0);
-        
-        for(int i=0;i<n;i++)
-            parent[i]=i;
-        
-        for(int i=0;i<n;i++){
-            for(int j=i+1;j<n;j++){
-                if(isConnected[i][j] == 1){
-                    Union(i,j,parent,rank);
-                }
-            }
-        }
-        
+      int n = isConnected.size();
         int count = 0;
+        vector<int>visited(n, 0);
+        
         for(int i=0;i<n;i++){
-            if(i == parent[i])
+            if(!visited[i]){
+                dfs(i, visited, isConnected);
                 count++;
+            }
         }
         return count;
     }
