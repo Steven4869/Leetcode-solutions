@@ -1,34 +1,34 @@
 class Solution {
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
-        //Creating Adjacency List 
+        //This question is similar to the Topological sort 
+        int n = graph.size();
         unordered_map<int, list<int>>adjList;
-        vector<int>outdegree(graph.size());
+        vector<int>indegree(n,0);
         queue<int>q;
         for(int i=0;i<graph.size();i++){
-            for(int neighbor:graph[i]){
+            for(const auto&neighbor:graph[i]){
                 adjList[neighbor].push_back(i);
-                outdegree[i]++;
+                indegree[i]++;
             }
-            if(outdegree[i]==0){
+            if(indegree[i]==0)
                 q.push(i);
-            }
         }
         
-        vector<int>safe;
+        vector<int>result;
         while(!q.empty()){
-            int front = q.front();
+            int frontNode = q.front();
             q.pop();
             
-            safe.push_back(front);
-            for(auto neighbors:adjList[front]){
-                outdegree[neighbors]--;
-                if(outdegree[neighbors]==0){
-                    q.push(neighbors);
-                }
+            result.push_back(frontNode);
+            
+            for(const auto &neighbor:adjList[frontNode]){
+                indegree[neighbor]--;
+                if(indegree[neighbor]==0)
+                    q.push(neighbor);
             }
         }
-        sort(safe.begin(), safe.end());
-        return safe;
+        sort(result.begin(), result.end());
+        return result;
     }
 };
