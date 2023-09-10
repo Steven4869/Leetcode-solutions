@@ -34,6 +34,6 @@ public:
         int op3 = height(root->left)+height(root->right);
         int ans = max(op1,max(op2,op3));
         return ans;
-        
+        //This is O(N^2) solution which can be improved if we do the height of the binary tree in the same function 
     }
 };
